@@ -49,11 +49,17 @@ module Api
         assert_response :no_content
       end
 
-      test 'should forbid destroy user' do 
+      test 'should forbid destroy user' do
         assert_no_difference('User.count') do
           delete api_v1_user_url(@user), as: :json
         end
         assert_response :forbidden
+      end
+
+      test 'destroy user should destroy linked product' do
+        assert_difference('Product.count', -1) do
+          users(:one).destroy
+        end
       end
     end
   end
