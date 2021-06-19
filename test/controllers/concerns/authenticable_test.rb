@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AuthenticableTest < ActionDispatch::IntegrationTest
   setup do
     @user = users(:one)

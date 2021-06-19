@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'test_helper'
 
 module Api
@@ -23,21 +24,35 @@ module Api
         assert_response :created
       end
 
-      test "should update user" do
-        patch api_v1_user_url(@user), params: { user: { email: @user.email, password: '123456' } }, as: :json
+      test 'should update user' do
+        patch api_v1_user_url(@user), params: { user: { email: @user.email, password: '123456' } },
+              headers: { Authorization: JsonWebToken.encode(user_id: @user.id) }, as: :json
         assert_response :success
       end
 
-      test "should not update user when invalid params are sent" do
-        patch api_v1_user_url(@user), params: { user: { email:'bad_email', password: '123456' } }, as: :json
+      test 'should not update user when invalid params are sent' do
+        patch api_v1_user_url(@user), params: { user: { email: 'bad_email', password: '123456' } }, as: :json
         assert_response :unprocessable_entity
       end
 
-      test "should destroy user" do
+      test 'should forbid update user' do
+        patch api_v1_user_url(@user), params: { user: { email: @user.email } }, as: :json
+        assert_response :forbidden
+      end
+
+      test 'should destroy user' do
         assert_difference('User.count', -1) do
-          delete api_v1_user_url(@user), as: :json
+          delete api_v1_user_url(@user),
+                 headers: { Authorization: JsonWebToken.encode(user_id: @user.id) }, as: :json
         end
         assert_response :no_content
+      end
+
+      test 'should forbid destroy user' do 
+        assert_no_difference('User.count') do
+          delete api_v1_user_url(@user), as: :json
+        end
+        assert_response :forbidden
       end
     end
   end
