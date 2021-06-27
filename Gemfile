@@ -8,6 +8,7 @@ ruby '2.6.1'
 gem 'bcrypt', '~> 3.1.7'
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'jwt'
+gem 'fast_jsonapi'
 gem 'puma', '~> 3.11'
 gem 'rails', '~> 6.0.0'
 gem 'sqlite3', '~> 1.4'
